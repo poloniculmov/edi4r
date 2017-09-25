@@ -14,6 +14,7 @@ BEGIN {
 require "edi4r/standards"
 require "edi4r/diagrams"
 
+
 =begin rdoc
 :main:README
 :title:edi4r
@@ -1007,3 +1008,5 @@ module EDI
   end
 
 end # module EDI
+
+require "edi4r/edifact"
