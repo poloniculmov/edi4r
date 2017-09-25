@@ -1030,8 +1030,8 @@ module EDI::E
     #    # etc.
     #    msg.add seg
     #
-    def new_segment(tag)
-      Segment.new(self, tag)
+    def new_segment(tag, options=nil)
+      Segment.new(self, tag, options)
     end
 
     # Internal use only!
@@ -1231,8 +1231,11 @@ module EDI::E
     # Don't create segments without their context - use Message#new_segment()
     # instead.
 
-    def initialize(p, tag)
+    attr_reader :repeat_indicator
+
+    def initialize(p, tag, options=nil)
       super(p, tag)
+      @repeat_indicator = options
 
       each_BCDS(tag) do |entry|
         id = entry.name
@@ -1289,7 +1292,11 @@ module EDI::E
 
 
       indent = rt.e_indent * (self.level || 0)
-      s << indent << name << rt.una.de_sep
+      text = name
+      if @repeat_indicator
+        text = "#{name}:#{rep}"
+      end
+      s << indent << text << rt.una.de_sep
       skip_count = 0
       each {|obj|
         if obj.empty?
